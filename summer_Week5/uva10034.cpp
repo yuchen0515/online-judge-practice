@@ -18,7 +18,7 @@ void dfs(s_pair num[], bool vis[], int32_t *tol_num, int32_t edge_num, int32_t c
     if (*tol_num == edge_num-1) return;
     vis[cur] = true;
     double dis_num = 1000000000;
-    int32_t dis_po = 0;
+    int32_t dis_po = -1;
 
     for (int32_t j = 0 ; j < edge_num ; j++){
         if (j == cur) continue;
@@ -28,6 +28,9 @@ void dfs(s_pair num[], bool vis[], int32_t *tol_num, int32_t edge_num, int32_t c
             dis_po = j;
         }
     }
+
+    if (dis_po ==-1) return;
+
     ans += dis_num;
     *tol_num +=1;
     dfs(num, vis, tol_num, edge_num, dis_po);
