@@ -6,3 +6,4 @@ all:
 	g++ uva10369.cpp -o uva10369
 	g++ uva534.cpp -o uva534
 	g++ uva11733.cpp -o uva11733
+	g++ uva1395.cpp -o uva1395
