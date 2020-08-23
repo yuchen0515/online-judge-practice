@@ -21,7 +21,7 @@ struct cmp{
 double dist(pair<int32_t, int32_t> a, pair<int32_t, int32_t> b){
     int32_t tp_a = a.first - b.first; 
     int32_t tp_b = a.second - b.second;
-    return sqrt((tp_a * tp_a) + (tp_b * tp_b));
+    return sqrt((double)(tp_a * tp_a) + (tp_b * tp_b));
 }
 
 int32_t dis_find(int32_t root[], int32_t a){
@@ -76,8 +76,9 @@ int main(){
             stl.pop();
 
             if (dis_find(root, temp.u) != dis_find(root, temp.v)){
-                if (cou < sal && cou != 0)
-                    ans += temp.w;
+                if (cou < point_num - sal && ans < temp.w){
+                    ans = temp.w;
+                }
                 dis_union(root, temp.u, temp.v);
                 cou += 1;
             }
