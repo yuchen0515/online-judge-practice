@@ -34,7 +34,10 @@ void dis_union(int32_t root[], int32_t a, int32_t b){
     int32_t x = dis_find(root, a);
     int32_t y = dis_find(root, b);
 
-    if (x != y) root[y] = x;
+    int32_t min_t = x < y ? x : y;
+    int32_t max_t = x > y ? x : y;
+
+    if (x != y) root[max_t] = min_t;
 }
 
 
@@ -47,7 +50,6 @@ int main(){
         if (t == 0) break;
         int32_t tp_x = 0, tp_y = 0;
 
-        if (cas != 1) cout << endl;
         cout << "Scenario #" << cas << endl;
 
         pair<int32_t, int32_t> num[t];
@@ -81,13 +83,14 @@ int main(){
             int32_t dis_u = dis_find(root, temp.u);
             int32_t dis_v = dis_find(root, temp.v);
             if (dis_u != dis_v){
-                if (dis_u == 0 || dis_v == 0){
-                    ans += temp.w;
-                    dis_union(root, temp.u, temp.v);
+                if (dis_u + dis_v == 1){
+                    ans = temp.w;
+                    break;
                 }
+                dis_union(root, temp.u, temp.v);
             }
         }
-        printf("Frog Distance = %.3f\n", ans);
+        printf("Frog Distance = %.3f\n\n", ans);
         cas += 1;
     }
 
