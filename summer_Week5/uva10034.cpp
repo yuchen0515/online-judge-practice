@@ -1,69 +1,84 @@
-#include <iostream>
-#include <cmath>
+#include <bits/stdc++.h>
 
 using namespace std;
 
-typedef struct pair{
-    double x;
-    double y;
+typedef struct S_pair{
+    int32_t u;
+    int32_t v;
+    double w;
 }s_pair;
 
-double dist(s_pair a, s_pair b){
-    return sqrt((a.x-b.x)*(a.x-b.x) + (a.y-b.y)*(a.y-b.y));
+double dist(pair<double, double> num[], int32_t u, int32_t v){
+    double tp_u = num[u].first - num[v].first;
+    double tp_v = num[u].second - num[v].second;
+    return sqrt(tp_u * tp_u + tp_v * tp_v);
 }
 
-
-double ans = 0;
-void dfs(s_pair num[], bool vis[], int32_t *tol_num, int32_t edge_num, int32_t cur){
-    if (*tol_num == edge_num-1) return;
-    vis[cur] = true;
-    double dis_num = 1000000000;
-    int32_t dis_po = -1;
-
-    for (int32_t j = 0 ; j < edge_num ; j++){
-        if (j == cur) continue;
-        double temp = dist(num[cur], num[j]);
-        if (vis[j] == 0 && dis_num > temp){
-            dis_num = temp;
-            dis_po = j;
-        }
+struct cmp{
+    bool operator()(s_pair a, s_pair b){
+        return a.w > b.w;
     }
-
-    if (dis_po ==-1) return;
-
-    ans += dis_num;
-    *tol_num +=1;
-    dfs(num, vis, tol_num, edge_num, dis_po);
-}
+};
 
 int main(){
 
     int32_t t = 0;
     cin >> t;
 
-    for (int32_t p = 0 ; p < t ; p++){
-        ans = 0;
-
+    for (int32_t p = 0; p < t ; p++){
         if (p != 0) cout << endl;
 
-        int32_t edge_num = 0;
-        double tp_x = 0 , tp_y = 0;
-        cin >> edge_num;
+        int32_t point_num = 0;
+        double tp_x = 0, tp_y = 0;
+        cin >> point_num;
 
-        s_pair num[edge_num];
-        bool vis[edge_num] = {0};
-        int32_t tol_num = 0;
-
-        for (int32_t i = 0 ; i < edge_num ; i++){
+        pair<double, double> num[point_num];
+        for (int32_t i = 0 ; i < point_num ; i++){
             cin >> tp_x >> tp_y;
             num[i] = {tp_x, tp_y};
         }
 
+        vector<s_pair> edge[point_num];
+        for (int32_t i = 0 ; i < point_num ; i++){
+            for (int32_t j = i+1 ; j < point_num ; j++){
+                edge[i].push_back({i, j, dist(num, i, j)});
+                edge[j].push_back({j, i, dist(num, i, j)});
+            }
+        }
 
-        dfs(num, vis, &tol_num, edge_num, 0);
+        bool vis[point_num] = {0};
+        priority_queue<s_pair, vector<s_pair>, cmp> stl;
+        queue<int32_t> order;
+        order.push(0);
+        vis[0] = 1;
 
-        printf("%.2lf\n", ans);
+        double ans = 0;
+
+        while (!order.empty()){
+            int32_t cur = order.front();
+            order.pop();
+
+            for (auto c:edge[cur]){
+                stl.push(c);
+            }
+
+            while (!stl.empty()){
+                s_pair temp = stl.top();
+                stl.pop();
+
+                if (vis[temp.v] == 0){
+                    order.push(temp.v);
+                    vis[temp.v] = 1;
+                    ans += temp.w;
+                    break;
+                }
+            }
+        }
+
+        printf("%.2f\n", ans);
+
     }
+
 
     return 0;
 }
