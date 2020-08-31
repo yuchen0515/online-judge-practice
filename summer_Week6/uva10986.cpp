@@ -49,7 +49,7 @@ int main(){
         priority_queue<s_pair, vector<s_pair>, cmp> stl;
         stl.push({start, 0, 0});
         short_path[start] = 0;
-        vis[start] = 1;
+        //vis[start] = 1;
 
         while (!stl.empty()){
             s_pair temp = stl.top();
@@ -58,7 +58,7 @@ int main(){
             for (auto c: num[temp.sta]){
                 if (short_path[c.sta] + c.w < short_path[c.end]){
                     short_path[c.end] = c.w + short_path[c.sta];
-                    stl.push({c.sta, c.end, c.w});
+                    stl.push({c.end, c.sta, c.w});
                 }
             }
         }
