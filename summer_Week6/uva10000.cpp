@@ -20,47 +20,56 @@ int main(){
         int32_t tp_x = 0 , tp_y = 0;
         
         vector<s_pair> num[point_num+1];
-        int32_t vis[point_num+1] = {0};
+        int32_t table[point_num+1] = {0};
 
         int32_t start = 0;
         cin >> start;
+
+        int32_t long_path = 0 , end = -1;
 
         while (1){
             cin >> tp_x >> tp_y;
             if (tp_x == 0 && tp_y == 0) break;
 
-            num[tp_x].push_back({tp_y, 0});
+            num[tp_x].push_back({tp_y, 1});
         }
+        
+        for (int32_t i = 0 ; i < point_num-1; i++){
+            queue<int32_t> stl;
+            int32_t vis[point_num+1] = {0};
+            stl.push(start);
 
-        queue<int32_t> order;
-        order.push(start);
-        vis[start] = 1;
 
-        int32_t long_path = 0 , end = 10000;
-        while (!order.empty()){
-            int32_t temp = order.front();
-            order.pop();
+            while (!stl.empty()){
+                int32_t temp = stl.front();
+                stl.pop();
 
-        //修
-            for (auto c:num[temp]){
-                if (vis[c.to] == 0){
-                    order.push(c.to);
-                    vis[c.to] = vis[temp] + 1;
-                }
-                if (vis[c.to] >= long_path){
-                    if (vis[c.to] == long_path && c.to < end)
-                        end = c.to;
-                    if (vis[c.to] > long_path)
-                        end = c.to;
+                for (auto c:num[temp]){
 
-                    long_path = vis[c.to];
+                    if (table[temp] + c.w > table[c.to]){
+                        table[c.to] = table[temp] + c.w;
+                    }
+                    if (vis[c.to] == 0){
+                        vis[c.to] = 1;
+                        stl.push(c.to);
+                    }
 
                 }
+
             }
         }
 
 
 
+        for (int32_t i = 1 ; i <= point_num ; i++){
+            if (table[i] > long_path){
+                long_path = table[i];
+                end = i;
+            }
+        }
+
+        if (long_path == 0)
+            end = start;
 
         printf("Case %d: The longest path from %d has length %d, finishing at %d.\n\n", cas, start, long_path, end);
 
