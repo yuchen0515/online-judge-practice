@@ -29,10 +29,11 @@ int main(){
 
         vector<s_pair> num[105];
         int32_t short_path[105];
-        //int32_t vis[k];
+        int32_t cur[105];
 
         for (int32_t i = 0 ; i < 105; i++){
             short_path[i] = 1000000;
+            cur[i] = -1;
         }
         
 
@@ -72,14 +73,14 @@ int main(){
             for (auto c: num[temp.from]){
                 int32_t cmpp = short_path[c.from] + c.w;
                 
-                //有問題
-                if (temp.t != c.t){
+                if (cur[c.from] != -1 && cur[c.from] != c.t){
                     cmpp += 60;
                 }
 
                 if (cmpp < short_path[c.to]){
                     short_path[c.to] = cmpp;
                     stl.push({c.to, c.from, c.t, c.w});
+                    cur[c.to] = c.t;
                 }
             }
         }
@@ -89,12 +90,6 @@ int main(){
         else 
             cout << short_path[k] << endl;
     }
-
-
-
-
-
-
 
 
     return 0;
